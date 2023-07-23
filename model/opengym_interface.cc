@@ -188,6 +188,7 @@ OpenGymInterface::Init()
 
   // send init msg to python
   zmq::message_t request(simInitMsg.ByteSizeLong());;
+//  std::cout << "length is " << simInitMsg.ByteSizeLong() << std::endl;
   simInitMsg.SerializeToArray(request.data(), simInitMsg.ByteSizeLong());
   m_zmq_socket.send (request, zmq::send_flags::none);
 
@@ -255,6 +256,7 @@ OpenGymInterface::NotifyCurrentState()
 
   // send env state msg to python
   zmq::message_t request(envStateMsg.ByteSizeLong());;
+//  std::cout << "length is " << envStateMsg.ByteSizeLong() << std::endl;
   envStateMsg.SerializeToArray(request.data(), envStateMsg.ByteSizeLong());
   m_zmq_socket.send (request, zmq::send_flags::none);
 

@@ -7,7 +7,7 @@ import numpy as np
 
 import gym
 from gym import spaces
-from gym.utils import seeding
+# from gym.utils import seeding
 from enum import IntEnum
 
 from ns3gym.start_sim import start_sim_script, build_ns3_project
@@ -385,11 +385,11 @@ class Ns3Env(gym.Env):
         # get first observations
         self.ns3ZmqBridge.rx_env_state()
         self.envDirty = False
-        self.seed()
+        # self.seed()
 
-    def seed(self, seed=None):
-        self.np_random, seed = seeding.np_random(seed)
-        return [seed]
+    # def seed(self, seed=None):
+    #     self.np_random, seed = seeding.np_random(seed)
+    #     return [seed]
 
     def get_state(self):
         obs = self.ns3ZmqBridge.get_obs()

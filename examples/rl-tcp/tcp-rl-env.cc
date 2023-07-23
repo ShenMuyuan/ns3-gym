@@ -606,7 +606,7 @@ TcpTimeStepGymEnv::GetSsThresh (Ptr<const TcpSocketState> tcb, uint32_t bytesInF
 
   if (!m_started) {
     m_started = true;
-    Notify();
+//    Notify();
     ScheduleNextStateRead();
   }
 
@@ -625,7 +625,7 @@ TcpTimeStepGymEnv::IncreaseWindow (Ptr<TcpSocketState> tcb, uint32_t segmentsAck
 
   if (!m_started) {
     m_started = true;
-    Notify();
+//    Notify();
     ScheduleNextStateRead();
   }
   // action

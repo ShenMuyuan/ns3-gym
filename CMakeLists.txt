@@ -1,16 +1,18 @@
-include(FindPkgConfig)
-if(NOT PKG_CONFIG_FOUND)
-    message(STATUS "pkgconf not found")
-    return()
-endif()
+#include(FindPkgConfig)
+#if(NOT PKG_CONFIG_FOUND)
+#    message(STATUS "pkgconf not found")
+#    return()
+#endif()
+#
+#pkg_check_modules(ZMQ libzmq)
+#if(NOT ZMQ_FOUND)
+#    message(STATUS "zeromq not found")
+#    return()
+#endif()
 
-pkg_check_modules(ZMQ libzmq)
-if(NOT ZMQ_FOUND)
-    message(STATUS "zeromq not found")
-    return()
-endif()
+find_package(cppzmq REQUIRED)
 
-find_package(Protobuf REQUIRED)
+find_package(Protobuf REQUIRED CONFIG)
 if(NOT Protobuf_FOUND)
     message(STATUS "protobuf not found")
   return()
@@ -37,13 +39,16 @@ set(header_files
     model/spaces.h
 )
 
+#message("ZeroMQ_LIBRARIES is ${ZeroMQ_LIBRARIES}")
+#message("ZMQ_LIBRARIES is ${ZMQ_LIBRARIES}")
+
 build_lib(
   LIBNAME opengym
   SOURCE_FILES ${source_files}
   HEADER_FILES ${header_files}
   LIBRARIES_TO_LINK
     ${libcore}
-    ${ZMQ_LIBRARIES}
+    cppzmq
     protobuf::libprotobuf
   TEST_SOURCES
     test/opengym-test-suite.cc
