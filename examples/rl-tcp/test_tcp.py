@@ -33,8 +33,6 @@ my_seed = 42
 if args.seed:
     my_seed = args.seed
 print("Using random seed {} for reproducibility.".format(my_seed))
-np.random.seed(my_seed)
-torch.manual_seed(my_seed)
 
 startSim = False
 iterationNum = 1
@@ -82,8 +80,8 @@ get_agent.tcpAgents = {}
 # get_agent.ob_space = ob_space
 # get_agent.ac_space = ac_space
 
-np.random.seed(10)
-torch.manual_seed(10)
+np.random.seed(my_seed)
+torch.manual_seed(my_seed)
 
 try:
     while True:
