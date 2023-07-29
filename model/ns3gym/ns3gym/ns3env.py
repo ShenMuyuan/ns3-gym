@@ -15,6 +15,7 @@ from ns3gym.start_sim import start_sim_script, build_ns3_project
 import ns3gym.messages_pb2 as pb
 from google.protobuf.any_pb2 import Any
 
+import py_cycle
 
 __author__ = "Piotr Gawlowicz"
 __copyright__ = "Copyright (c) 2018, Technische Universität Berlin"
@@ -78,6 +79,9 @@ class Ns3ZmqBridge(object):
         self.gameOverReason = None
         self.extraInfo = None
         self.newStateRx = False
+        self.prev_recv_env_cycle = 0
+        self.recv_env_cycle = 0
+        self.prev_send_act_cycle = 0
 
     def close(self):
         try:
@@ -178,6 +182,9 @@ class Ns3ZmqBridge(object):
             return
 
         request = self.socket.recv()
+        # For benchmarking: here get CPU cycle
+        self.prev_recv_env_cycle = self.recv_env_cycle
+        self.recv_env_cycle = py_cycle.getCycle()
         envStateMsg = pb.EnvStateMsg()
         envStateMsg.ParseFromString(request)
 
@@ -204,6 +211,10 @@ class Ns3ZmqBridge(object):
         reply = pb.EnvActMsg()
         reply.stopSimReq = True
 
+        # last cycle information
+        reply.pyRecvEnvCpuCycle = self.prev_recv_env_cycle
+        reply.pySendActCpuCycle = self.prev_send_act_cycle
+
         replyMsg = reply.SerializeToString()
         self.socket.send(replyMsg)
         self.newStateRx = False
@@ -219,7 +230,13 @@ class Ns3ZmqBridge(object):
         if self.forceEnvStop:
             reply.stopSimReq = True
 
+        # the values will be passed to C++ next time
+        reply.pyRecvEnvCpuCycle = self.prev_recv_env_cycle
+        reply.pySendActCpuCycle = self.prev_send_act_cycle
+
         replyMsg = reply.SerializeToString()
+        # For benchmarking: here get CPU cycle
+        self.prev_send_act_cycle = py_cycle.getCycle()
         self.socket.send(replyMsg)
         self.newStateRx = False
         return True

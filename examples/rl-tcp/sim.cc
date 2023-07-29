@@ -50,6 +50,19 @@
 #include "ns3/opengym-module.h"
 #include "tcp-rl.h"
 
+extern std::vector<uint64_t> cpp2py_durations;
+extern std::vector<uint64_t> py2cpp_durations;
+
+uint64_t average(std::vector<uint64_t> const& v){
+    if(v.empty()){
+        return 0;
+    }
+
+    auto count = v.size();
+
+    return std::reduce(v.begin(), v.end()) / count;
+}
+
 using namespace ns3;
 
 NS_LOG_COMPONENT_DEFINE ("TcpVariantsComparison");
@@ -312,6 +325,10 @@ int main (int argc, char *argv[])
   }
 
   PrintRxCount();
+  auto cpp2py_avg_cycle = average(cpp2py_durations);
+  auto py2cpp_avg_cycle = average(py2cpp_durations);
+  std::cout << "cpp2py_avg_cycle = " << cpp2py_avg_cycle
+            << ", py2cpp_avg_cycle = " << py2cpp_avg_cycle << std::endl;
   Simulator::Destroy ();
   return 0;
 }

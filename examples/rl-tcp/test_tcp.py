@@ -24,6 +24,18 @@ __email__ = "gawlowicz@tkn.tu-berlin.de"
 # args = parser.parse_args()
 # startSim = bool(args.start)
 # iterationNum = int(args.iterations)
+
+parser = argparse.ArgumentParser()
+parser.add_argument('--seed', type=int,
+                    help='set seed for reproducibility')
+args = parser.parse_args()
+my_seed = 42
+if args.seed:
+    my_seed = args.seed
+print("Using random seed {} for reproducibility.".format(my_seed))
+np.random.seed(my_seed)
+torch.manual_seed(my_seed)
+
 startSim = False
 iterationNum = 1
 
@@ -41,8 +53,8 @@ env.reset()
 
 ob_space = env.observation_space
 ac_space = env.action_space
-print("Observation space: ", ob_space, ob_space.dtype)
-print("Action space: ", ac_space, ac_space.dtype)
+# print("Observation space: ", ob_space, ob_space.dtype)
+# print("Action space: ", ac_space, ac_space.dtype)
 
 stepIdx = 0
 currIt = 0
@@ -75,13 +87,13 @@ torch.manual_seed(10)
 
 try:
     while True:
-        print("Start iteration: ", currIt)
+        # print("Start iteration: ", currIt)
         obs = env.reset()
         info = {}
         reward = 0
         done = False
-        print("Step: ", stepIdx)
-        print("---obs: ", obs)
+        # print("Step: ", stepIdx)
+        # print("---obs: ", obs)
 
         # get existing agent of create new TCP agent if needed
         tcpAgent = get_agent(obs)
@@ -89,11 +101,11 @@ try:
         while True:
             stepIdx += 1
             action = tcpAgent.get_action(obs, reward, done, info)
-            print("---action: ", action)
+            # print("---action: ", action)
 
-            print("Step: ", stepIdx)
+            # print("Step: ", stepIdx)
             obs, reward, done, info = env.step(action)
-            print("---obs, reward, done, info: ", obs, reward, done, info)
+            # print("---obs, reward, done, info: ", obs, reward, done, info)
 
             # get existing agent of create new TCP agent if needed
             tcpAgent = get_agent(obs)
